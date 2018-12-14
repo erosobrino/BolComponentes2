@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.ListBox;
 
 namespace BolComponentes2
 {
@@ -15,7 +16,81 @@ namespace BolComponentes2
         public Form1()
         {
             InitializeComponent();
-            //k
+        }
+
+        private void btTraspasar_Click(object sender, EventArgs e)
+        {
+            SelectedIndexCollection seleccionIndices = lboxLista1.SelectedIndices;
+            for (int i = 0; i < seleccionIndices.Count; i++)
+            {
+                int id = seleccionIndices[i];
+                if (id > lboxLista2.Items.Count)
+                {
+                    id = lboxLista2.Items.Count;
+                }
+                lboxLista2.Items.Insert(id, lboxLista1.Items[seleccionIndices[i]]);
+            }
+            toolTip1.SetToolTip(this.lboxLista2, "Hay " + lboxLista2.Items.Count + " elementos");
+        }
+
+        private void btTraspasar2_Click(object sender, EventArgs e)
+        {
+            SelectedIndexCollection seleccionIndices = lboxLista2.SelectedIndices;
+            for (int i = 0; i < seleccionIndices.Count; i++)
+            {
+                int id = seleccionIndices[i];
+                if (id > lboxLista1.Items.Count)
+                {
+                    id = lboxLista1.Items.Count;
+                }
+                lboxLista1.Items.Insert(id, lboxLista2.Items[seleccionIndices[i]]);
+            }
+        }
+
+        private void btAñadir_Click(object sender, EventArgs e)
+        {
+            String texto = tbTexto.Text;
+            if (texto.Length > 0)
+            {
+                lboxLista1.Items.Add(texto);
+            }
+            lbl1.Text = lboxLista1.Items.Count + "";
+        }
+
+        private void btQuitar_Click(object sender, EventArgs e)
+        {
+            SelectedIndexCollection seleccionIndices = lboxLista1.SelectedIndices;
+            for (int i = seleccionIndices.Count - 1; i > -1; i--)
+            {
+                lboxLista1.Items.RemoveAt(seleccionIndices[i]);
+            }
+            lbl1.Text = lboxLista1.Items.Count + "";
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            lboxLista1.Items.Add("ero");
+            lboxLista1.Items.Add("miguel");
+            lboxLista1.Items.Add("julio");
+            lboxLista1.Items.Add("dani");
+            lboxLista1.Items.Add("alex");
+            lbl1.Text = lboxLista1.Items.Count + "";
+            lboxLista1_SelectedIndexChanged(sender, e);
+        }
+
+        private void lboxLista1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string cadena = "Seleccionados: ";
+            SelectedIndexCollection seleccionIndices = lboxLista1.SelectedIndices;
+            for (int i = 0; i < seleccionIndices.Count; i++)
+            {
+                cadena += i + " ";
+            }
+            if (seleccionIndices.Count == 0)
+            {
+                cadena = "Sin seleccionar";
+            }
+            lbl2.Text = cadena;
         }
     }
 }

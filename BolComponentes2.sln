@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolComponentes2", "BolComponentes2\BolComponentes2.csproj", "{965AB57B-13DF-40F2-9D9A-F3A7F8906431}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ejer1", "BolComponentes2\Ejer1.csproj", "{965AB57B-13DF-40F2-9D9A-F3A7F8906431}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
