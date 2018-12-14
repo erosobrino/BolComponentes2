@@ -15,6 +15,7 @@ namespace BolComponentes2
         public Form1()
         {
             InitializeComponent();
+            //k
         }
     }
 }
