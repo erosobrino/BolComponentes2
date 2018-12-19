@@ -15,9 +15,8 @@ namespace BolComponentes2
     //Validado
     public partial class Form1 : Form
     {
-        Icon icon1 = new Icon("D:\\Descargas\\ubuntu.ico");
-        //Icon icon1 = new Icon(Properties.Resources.);
-        Icon icon2 = new Icon("D:\\Descargas\\Firefox.ico");
+        Icon icon1 = Properties.Resources.Firefox;
+        Icon icon2 = Properties.Resources.ubuntu;
         int cont = 0;
         Timer timer = new Timer();
         public Form1()
@@ -94,7 +93,7 @@ namespace BolComponentes2
             lboxLista1.Items.Add("alex");
             lbl1.Text = lboxLista1.Items.Count + "";
             lboxLista1_SelectedIndexChanged(sender, e);
-            timer.Interval = 1000;
+            timer.Interval = 200;
             timer.Tick += new EventHandler(cambiaTitulo);
             timer.Start();
         }
