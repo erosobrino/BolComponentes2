@@ -49,7 +49,7 @@
             this.lboxLista1.Location = new System.Drawing.Point(12, 8);
             this.lboxLista1.Name = "lboxLista1";
             this.lboxLista1.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.lboxLista1.Size = new System.Drawing.Size(140, 132);
+            this.lboxLista1.Size = new System.Drawing.Size(195, 132);
             this.lboxLista1.TabIndex = 0;
             this.toolTip1.SetToolTip(this.lboxLista1, "Lista de elementos");
             this.lboxLista1.SelectedIndexChanged += new System.EventHandler(this.lboxLista1_SelectedIndexChanged);
@@ -58,9 +58,9 @@
             // 
             this.lboxLista2.FormattingEnabled = true;
             this.lboxLista2.ItemHeight = 16;
-            this.lboxLista2.Location = new System.Drawing.Point(181, 8);
+            this.lboxLista2.Location = new System.Drawing.Point(247, 8);
             this.lboxLista2.Name = "lboxLista2";
-            this.lboxLista2.Size = new System.Drawing.Size(140, 132);
+            this.lboxLista2.Size = new System.Drawing.Size(195, 132);
             this.lboxLista2.TabIndex = 1;
             this.toolTip1.SetToolTip(this.lboxLista2, "Hay 0 elementos");
             // 
@@ -68,7 +68,7 @@
             // 
             this.btAñadir.Location = new System.Drawing.Point(12, 207);
             this.btAñadir.Name = "btAñadir";
-            this.btAñadir.Size = new System.Drawing.Size(140, 54);
+            this.btAñadir.Size = new System.Drawing.Size(195, 54);
             this.btAñadir.TabIndex = 4;
             this.btAñadir.Text = "Añadir";
             this.toolTip1.SetToolTip(this.btAñadir, "Añade el texto del textbox a la primera lista");
@@ -77,9 +77,9 @@
             // 
             // btQuitar
             // 
-            this.btQuitar.Location = new System.Drawing.Point(181, 207);
+            this.btQuitar.Location = new System.Drawing.Point(247, 207);
             this.btQuitar.Name = "btQuitar";
-            this.btQuitar.Size = new System.Drawing.Size(140, 54);
+            this.btQuitar.Size = new System.Drawing.Size(195, 54);
             this.btQuitar.TabIndex = 5;
             this.btQuitar.Text = "Quitar";
             this.toolTip1.SetToolTip(this.btQuitar, "Elimina el indice seleciconado de la primera lista");
@@ -90,7 +90,7 @@
             // 
             this.btTraspasar.Location = new System.Drawing.Point(12, 147);
             this.btTraspasar.Name = "btTraspasar";
-            this.btTraspasar.Size = new System.Drawing.Size(140, 54);
+            this.btTraspasar.Size = new System.Drawing.Size(195, 54);
             this.btTraspasar.TabIndex = 2;
             this.btTraspasar.Text = "Traspasar";
             this.toolTip1.SetToolTip(this.btTraspasar, "Traspasa los elementos seleccionados a la otra lista en el mismo orden");
@@ -99,9 +99,9 @@
             // 
             // btTraspasar2
             // 
-            this.btTraspasar2.Location = new System.Drawing.Point(181, 147);
+            this.btTraspasar2.Location = new System.Drawing.Point(247, 146);
             this.btTraspasar2.Name = "btTraspasar2";
-            this.btTraspasar2.Size = new System.Drawing.Size(140, 54);
+            this.btTraspasar2.Size = new System.Drawing.Size(195, 54);
             this.btTraspasar2.TabIndex = 3;
             this.btTraspasar2.Text = "Traspasar";
             this.toolTip1.SetToolTip(this.btTraspasar2, "Traspasa los elementos seleccionados a la otra lista en el mismo orden");
@@ -112,7 +112,7 @@
             // 
             this.tbTexto.Location = new System.Drawing.Point(12, 324);
             this.tbTexto.Name = "tbTexto";
-            this.tbTexto.Size = new System.Drawing.Size(309, 22);
+            this.tbTexto.Size = new System.Drawing.Size(430, 22);
             this.tbTexto.TabIndex = 8;
             this.toolTip1.SetToolTip(this.tbTexto, "Escribe el texto que quieras añadir");
             // 
@@ -129,7 +129,7 @@
             // lbl2
             // 
             this.lbl2.AutoSize = true;
-            this.lbl2.Location = new System.Drawing.Point(190, 284);
+            this.lbl2.Location = new System.Drawing.Point(244, 284);
             this.lbl2.Name = "lbl2";
             this.lbl2.Size = new System.Drawing.Size(46, 17);
             this.lbl2.TabIndex = 7;
@@ -140,7 +140,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(333, 367);
+            this.ClientSize = new System.Drawing.Size(454, 367);
             this.Controls.Add(this.lbl2);
             this.Controls.Add(this.lbl1);
             this.Controls.Add(this.tbTexto);

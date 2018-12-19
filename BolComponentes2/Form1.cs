@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BolComponentes2.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,8 +12,14 @@ using static System.Windows.Forms.ListBox;
 
 namespace BolComponentes2
 {
+    //Validado
     public partial class Form1 : Form
     {
+        Icon icon1 = new Icon("D:\\Descargas\\ubuntu.ico");
+        //Icon icon1 = new Icon(Properties.Resources.);
+        Icon icon2 = new Icon("D:\\Descargas\\Firefox.ico");
+        int cont = 0;
+        Timer timer = new Timer();
         public Form1()
         {
             InitializeComponent();
@@ -30,6 +37,11 @@ namespace BolComponentes2
                 }
                 lboxLista2.Items.Insert(id, lboxLista1.Items[seleccionIndices[i]]);
             }
+            for (int i = seleccionIndices.Count - 1; i >= 0; i--)
+            {
+                lboxLista1.Items.RemoveAt(seleccionIndices[i]);
+            }
+            lbl1.Text = lboxLista1.Items.Count + "";
             toolTip1.SetToolTip(this.lboxLista2, "Hay " + lboxLista2.Items.Count + " elementos");
         }
 
@@ -45,6 +57,12 @@ namespace BolComponentes2
                 }
                 lboxLista1.Items.Insert(id, lboxLista2.Items[seleccionIndices[i]]);
             }
+            for (int i = seleccionIndices.Count - 1; i >= 0; i--)
+            {
+                lboxLista2.Items.RemoveAt(seleccionIndices[i]);
+            }
+            lbl1.Text = lboxLista1.Items.Count + "";
+            toolTip1.SetToolTip(this.lboxLista2, "Hay " + lboxLista2.Items.Count + " elementos");
         }
 
         private void btAñadir_Click(object sender, EventArgs e)
@@ -76,6 +94,9 @@ namespace BolComponentes2
             lboxLista1.Items.Add("alex");
             lbl1.Text = lboxLista1.Items.Count + "";
             lboxLista1_SelectedIndexChanged(sender, e);
+            timer.Interval = 1000;
+            timer.Tick += new EventHandler(cambiaTitulo);
+            timer.Start();
         }
 
         private void lboxLista1_SelectedIndexChanged(object sender, EventArgs e)
@@ -84,13 +105,35 @@ namespace BolComponentes2
             SelectedIndexCollection seleccionIndices = lboxLista1.SelectedIndices;
             for (int i = 0; i < seleccionIndices.Count; i++)
             {
-                cadena += i + " ";
+                cadena += seleccionIndices[i] + " ";
             }
             if (seleccionIndices.Count == 0)
             {
                 cadena = "Sin seleccionar";
             }
             lbl2.Text = cadena;
+        }
+
+        private void cambiaTitulo(Object myObject, EventArgs eventArgs)
+        {
+            string titulo = "Ejercicio 1";
+            cont++;
+            if ((titulo.Length - cont) <= 0)
+            {
+                cont = 1;
+            }
+            this.Text = titulo.Substring((titulo.Length - 1 - cont), cont + 1);
+            if (cont % 2 == 0)
+            {
+                if (this.Icon == icon1)
+                {
+                    this.Icon = icon2;
+                }
+                else
+                {
+                    this.Icon = icon1;
+                }
+            }
         }
     }
 }
