@@ -11,11 +11,13 @@ using System.Windows.Forms;
 
 namespace Ejer2
 {
+    //Validado
     public partial class Form1 : Form
     {
         bool acertada = false;
         int contraseña = 1111;
         string[] teclas = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#" };
+        string a = "123456789*0#";
         public Form1()
         {
             InitializeComponent();
@@ -114,7 +116,10 @@ namespace Ejer2
         {
             Button bt = (Button)sender;
             if (bt.BackColor != Color.Red)
+            {
                 bt.BackColor = DefaultBackColor;
+                bt.UseVisualStyleBackColor = true;
+            }
         }
         private void MouseClickBt(object sender, EventArgs e)
         {
@@ -156,10 +161,11 @@ namespace Ejer2
                 saveFile.InitialDirectory = "D:\\";
                 saveFile.Filter = "Text (*.txt)|*.txt|All files|*.*";
                 saveFile.ValidateNames = true;
+                saveFile.OverwritePrompt = false;
                 DialogResult res = saveFile.ShowDialog();
                 if (res == DialogResult.OK)
                 {
-                    using (StreamWriter writer = new StreamWriter(saveFile.FileName,true))
+                    using (StreamWriter writer = new StreamWriter(saveFile.FileName, true))
                     {
                         writer.WriteLine(txtNumero.Text);
                     }
@@ -168,7 +174,7 @@ namespace Ejer2
             }
             else
             {
-                MessageBox.Show("Debes introducir un numero", "Error",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                MessageBox.Show("Debes introducir un numero", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
