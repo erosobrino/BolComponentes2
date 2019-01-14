@@ -13,7 +13,7 @@ namespace Ejer3
 {
     public partial class Form1 : Form
     {
-        Form2 form2 = new Form2();
+        public Form2 form2 = new Form2();
         Bitmap img;
         string[] imagenes = new string[] { ".BMP", ".GIF", ".JPEG", ".PNG", ".TIFF", ".ico" };
         List<string> rutas = new List<string>();
@@ -34,7 +34,7 @@ namespace Ejer3
             {
                 rutas.Clear();
                 img = new Bitmap(openFile.FileName);
-                lblDirectorio.Text = openFile.FileName.Substring(0, openFile.FileName.Length - openFile.FileName.LastIndexOf('\\'));
+                lblDirectorio.Text = openFile.FileName.Substring(0, openFile.FileName.Length - openFile.FileName.LastIndexOf('\\') - 1);
                 DirectoryInfo d = new DirectoryInfo(lblDirectorio.Text);
                 foreach (FileInfo f in d.GetFiles())
                     for (int i = 0; i < imagenes.Length; i++)
@@ -60,7 +60,7 @@ namespace Ejer3
             }
         }
 
-        private void btSiguiente_Click(object sender, EventArgs e)
+        public void btSiguiente_Click(object sender, EventArgs e)
         {
 
             if (index < rutas.Count - 1)
@@ -71,7 +71,7 @@ namespace Ejer3
             }
         }
 
-        private void btAnterior_Click(object sender, EventArgs e)
+        public void btAnterior_Click(object sender, EventArgs e)
         {
             if (index > 0)
             {
@@ -83,12 +83,37 @@ namespace Ejer3
 
         private void muestraImg()
         {
+            form2.Visible = false;
             form2.BackgroundImage = img;
             form2.Size = img.Size;
-            form2.Show();
-            Text = "Visor de Imagenes -<" + rutas[index].Substring(rutas[index].Length - rutas[index].LastIndexOf('\\') + 1) + ">";
-            lblInfo.Text = rutas[index].Substring(rutas[index].Length - rutas[index].LastIndexOf('\\') + 2);
-            lblInfo.Text += "\n" + new FileInfo(rutas[index]).Length + "\n" + img.Size;
+            form2.Top = (Screen.PrimaryScreen.WorkingArea.Height - form2.Height) / 2;
+            form2.Left = (Screen.PrimaryScreen.WorkingArea.Width - form2.Width) / 2;
+            form2.Show(this);
+            Text = "Visor de Imagenes -<" + rutas[index].Substring(rutas[index].LastIndexOf('\\')+1) + ">";
+            lblInfo.Text = rutas[index].Substring(rutas[index].LastIndexOf('\\') + 1);
+            long tamaño = new FileInfo(rutas[index]).Length;
+            string cadenaLong = "";
+            if (tamaño > 1024 && tamaño < 1048576)
+            {
+                cadenaLong = tamaño / 1024 + "KB";
+            }
+            if (tamaño >= 1048576)
+            {
+                cadenaLong = tamaño / 1048576 + "MB";
+            }
+            lblInfo.Text += "\n" + cadenaLong + "\n Alto: " + img.Size.Height + "\nAncho: " + img.Size.Width;
+        }
+
+        private void KeyDown_Flechas(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A)
+            {
+                btSiguiente_Click(sender, e);
+            }
+            if (e.KeyCode == Keys.D)
+            {
+                btAnterior_Click(sender, e);
+            }
         }
     }
 }
