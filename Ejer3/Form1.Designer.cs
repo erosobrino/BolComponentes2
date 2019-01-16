@@ -36,6 +36,7 @@
             this.lblDirectorio = new System.Windows.Forms.Label();
             this.lblInfo = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.lblError = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btAbrir
@@ -77,7 +78,7 @@
             // lblDirectorio
             // 
             this.lblDirectorio.AutoSize = true;
-            this.lblDirectorio.Location = new System.Drawing.Point(48, 165);
+            this.lblDirectorio.Location = new System.Drawing.Point(61, 166);
             this.lblDirectorio.Name = "lblDirectorio";
             this.lblDirectorio.Size = new System.Drawing.Size(0, 17);
             this.lblDirectorio.TabIndex = 3;
@@ -86,17 +87,27 @@
             // lblInfo
             // 
             this.lblInfo.AutoSize = true;
-            this.lblInfo.Location = new System.Drawing.Point(124, 348);
+            this.lblInfo.Location = new System.Drawing.Point(61, 193);
             this.lblInfo.Name = "lblInfo";
             this.lblInfo.Size = new System.Drawing.Size(0, 17);
             this.lblInfo.TabIndex = 4;
             this.toolTip1.SetToolTip(this.lblInfo, "Informacion de la imagen");
             // 
+            // lblError
+            // 
+            this.lblError.AutoSize = true;
+            this.lblError.ForeColor = System.Drawing.Color.Red;
+            this.lblError.Location = new System.Drawing.Point(91, 214);
+            this.lblError.Name = "lblError";
+            this.lblError.Size = new System.Drawing.Size(0, 17);
+            this.lblError.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(621, 258);
+            this.ClientSize = new System.Drawing.Size(621, 313);
+            this.Controls.Add(this.lblError);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.lblDirectorio);
             this.Controls.Add(this.btSiguiente);
@@ -120,6 +131,7 @@
         private System.Windows.Forms.Label lblDirectorio;
         private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label lblError;
     }
 }
 

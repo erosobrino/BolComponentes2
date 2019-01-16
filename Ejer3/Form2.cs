@@ -18,6 +18,12 @@ namespace Ejer3
             InitializeComponent();
         }
 
+        public Form2(Form1 form)
+        {
+            InitializeComponent();
+            form1 = form;
+        }
+
         private void siguienteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             form1.btSiguiente_Click(sender, e);
@@ -37,17 +43,12 @@ namespace Ejer3
         {
             if (e.KeyCode == Keys.A)
             {
-                form1.btSiguiente_Click(sender, e);
+                form1.btAnterior_Click(sender, e);
             }
             if (e.KeyCode == Keys.D)
             {
-                form1.btAnterior_Click(sender, e);
+                form1.btSiguiente_Click(sender, e);
             }
-        }
-
-        private void Form2_Load(object sender, EventArgs e)
-        {
-            form1 = (Form1)Owner;
         }
     }
 }

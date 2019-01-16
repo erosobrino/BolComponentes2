@@ -13,42 +13,62 @@ namespace Ejer3
 {
     public partial class Form1 : Form
     {
-        public Form2 form2 = new Form2();
+        public Form2 form2;
         Bitmap img;
-        string[] imagenes = new string[] { ".BMP", ".GIF", ".JPEG", ".PNG", ".TIFF", ".ico" };
+        string[] imagenes = new string[] { ".BMP", ".GIF", ".JPG", ".JPEG", ".PNG", ".TIFF", ".ico" };
         List<string> rutas = new List<string>();
         int index;
         public Form1()
         {
             InitializeComponent();
+            form2 = new Form2(this);
         }
 
         private void btAbrir_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
             openFile.Title = "Selecciona una imagen";
-            openFile.InitialDirectory = "C:\\";
+            openFile.InitialDirectory = Environment.GetEnvironmentVariable("homedrive") + "\\" + Environment.GetEnvironmentVariable("homepath");
             openFile.Filter = "Todos (*.*)|*.*";
             openFile.ValidateNames = true;
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 rutas.Clear();
-                img = new Bitmap(openFile.FileName);
-                lblDirectorio.Text = openFile.FileName.Substring(0, openFile.FileName.Length - openFile.FileName.LastIndexOf('\\') - 1);
-                DirectoryInfo d = new DirectoryInfo(lblDirectorio.Text);
-                foreach (FileInfo f in d.GetFiles())
-                    for (int i = 0; i < imagenes.Length; i++)
+                bool valido = false;
+                FileInfo f = new FileInfo(openFile.FileName);
+                for (int i = 0; i < imagenes.Length; i++)
+                {
+                    if (!valido)
                     {
                         if (String.Equals(f.Extension, imagenes[i], StringComparison.OrdinalIgnoreCase))
                         {
-                            rutas.Add(f.FullName);
-                            if (f.FullName == lblDirectorio.Text)
-                            {
-                                index = rutas.Count - 1;
-                            }
+                            valido = true;
                         }
                     }
-                muestraImg();
+                }
+                if (valido)
+                {
+                    lblError.Text = "";
+                    lblDirectorio.Text = f.DirectoryName;
+                    DirectoryInfo d = new DirectoryInfo(f.DirectoryName);
+                    foreach (FileInfo fileInfo in d.GetFiles())
+                        for (int i = 0; i < imagenes.Length; i++)
+                        {
+                            if (String.Equals(fileInfo.Extension, imagenes[i], StringComparison.OrdinalIgnoreCase))
+                            {
+                                rutas.Add(fileInfo.FullName);
+                                if (fileInfo.FullName == openFile.FileName)
+                                {
+                                    index = rutas.Count - 1;
+                                }
+                            }
+                        }
+                    muestraImg();
+                }
+                else
+                {
+                    lblError.Text = "Error en el archivo";
+                }
             }
         }
 
@@ -66,7 +86,6 @@ namespace Ejer3
             if (index < rutas.Count - 1)
             {
                 index++;
-                img = new Bitmap(rutas[index]);
                 muestraImg();
             }
         }
@@ -76,43 +95,52 @@ namespace Ejer3
             if (index > 0)
             {
                 index--;
-                img = new Bitmap(rutas[index]);
                 muestraImg();
             }
         }
 
         private void muestraImg()
         {
-            form2.Visible = false;
-            form2.BackgroundImage = img;
-            form2.Size = img.Size;
-            form2.Top = (Screen.PrimaryScreen.WorkingArea.Height - form2.Height) / 2;
-            form2.Left = (Screen.PrimaryScreen.WorkingArea.Width - form2.Width) / 2;
-            form2.Show(this);
-            Text = "Visor de Imagenes -<" + rutas[index].Substring(rutas[index].LastIndexOf('\\')+1) + ">";
-            lblInfo.Text = rutas[index].Substring(rutas[index].LastIndexOf('\\') + 1);
-            long tamaño = new FileInfo(rutas[index]).Length;
-            string cadenaLong = "";
-            if (tamaño > 1024 && tamaño < 1048576)
+            try
             {
-                cadenaLong = tamaño / 1024 + "KB";
+                lblError.Text = "";
+                lblInfo.Text = "";
+                img = new Bitmap(rutas[index]);
+                form2.Visible = true;
+                form2.Size = img.Size;
+                form2.pictureBox1.Image = img;
+                form2.Top = (Screen.PrimaryScreen.WorkingArea.Height - form2.Height) / 2;
+                form2.Left = (Screen.PrimaryScreen.WorkingArea.Width - form2.Width) / 2;
+                Text = "Visor de Imagenes -<" + rutas[index].Substring(rutas[index].LastIndexOf('\\') + 1) + ">";
+                lblInfo.Text = rutas[index].Substring(rutas[index].LastIndexOf('\\') + 1);
+                long tamaño = new FileInfo(rutas[index]).Length;
+                string cadenaLong = "";
+                if (tamaño > 1024 && tamaño < 1048576)
+                {
+                    cadenaLong = tamaño / 1024 + "KB";
+                }
+                if (tamaño >= 1048576)
+                {
+                    cadenaLong = tamaño / 1048576 + "MB";
+                }
+                lblInfo.Text += "\n" + cadenaLong + "\n Alto: " + img.Size.Height + "\nAncho: " + img.Size.Width;
             }
-            if (tamaño >= 1048576)
+            catch (ArgumentException)
             {
-                cadenaLong = tamaño / 1048576 + "MB";
+                lblError.Text = "Error en el archivo";
+                form2.Visible = false;
             }
-            lblInfo.Text += "\n" + cadenaLong + "\n Alto: " + img.Size.Height + "\nAncho: " + img.Size.Width;
         }
 
         private void KeyDown_Flechas(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.A)
             {
-                btSiguiente_Click(sender, e);
+                btAnterior_Click(sender, e);
             }
             if (e.KeyCode == Keys.D)
             {
-                btAnterior_Click(sender, e);
+                btSiguiente_Click(sender, e);
             }
         }
     }
