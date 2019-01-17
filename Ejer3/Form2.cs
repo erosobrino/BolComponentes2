@@ -12,6 +12,7 @@ namespace Ejer3
 {
     public partial class Form2 : Form
     {
+        //Validado
         Form1 form1;
         public Form2()
         {

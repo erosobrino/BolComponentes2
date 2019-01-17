@@ -13,6 +13,7 @@ namespace Ejer3
 {
     public partial class Form1 : Form
     {
+        //Validado
         public Form2 form2;
         Bitmap img;
         string[] imagenes = new string[] { ".BMP", ".GIF", ".JPG", ".JPEG", ".PNG", ".TIFF", ".ico" };
@@ -129,6 +130,10 @@ namespace Ejer3
             {
                 lblError.Text = "Error en el archivo";
                 form2.Visible = false;
+            }catch (ObjectDisposedException)
+            {
+                form2 = new Form2(this);
+                muestraImg();
             }
         }
 
@@ -136,7 +141,8 @@ namespace Ejer3
         {
             if (e.KeyCode == Keys.A)
             {
-                btAnterior_Click(sender, e);
+                //btAnterior_Click(sender, e);
+                btAnterior.PerformClick();
             }
             if (e.KeyCode == Keys.D)
             {
