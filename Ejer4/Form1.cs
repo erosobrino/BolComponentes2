@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-//- Lista de los archivos recientes (máximo de 5)
 //- Ajuste de línea(El menú dispondrá de un check).
 //- Cuadro de Acerca de… modal.Usa una función lambda para lanzar este cuadro. Ver
 //apéndice del tema de multihilo de Servicios.
@@ -83,6 +82,7 @@ namespace Ejer4
                 DialogResult res = openFile.ShowDialog();
                 if (res == DialogResult.OK)
                 {
+                    tbNote.Text = "";
                     using (StreamReader reader = new StreamReader(openFile.FileName))
                     {
                         String line = reader.ReadLine();
@@ -95,18 +95,11 @@ namespace Ejer4
                     }
                     ruta = openFile.FileName;
 
-                    //falla
-                    for (int i = rutasArchivos.Length - 1; i > 1; i--)
+                    for (int i = rutasArchivos.Length - 1; i > 0; i--)
                     {
                         rutasArchivos[i] = rutasArchivos[i - 1];
                     }
                     rutasArchivos[0] = ruta;
-                    
-
-                    foreach(string s in rutasArchivos)
-                    {
-                        Console.WriteLine(s);
-                    }
                 }
                 modificado = false;
             }
@@ -134,6 +127,11 @@ namespace Ejer4
                     modificado = false;
                     ruta = saveFile.FileName;
                 }
+                for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                {
+                    rutasArchivos[i] = rutasArchivos[i - 1];
+                }
+                rutasArchivos[0] = ruta;
             }
             return res;
         }
@@ -208,7 +206,15 @@ namespace Ejer4
 
         private void recientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            for (int i = 0; i < rutasArchivos.Length; i++)
+            {
+                if (rutasArchivos[i] != null)
+                {
+                    recientesToolStripMenuItem.DropDownItems[i].Text = rutasArchivos[i];
+                    bool boolTexto = recientesToolStripMenuItem.DropDownItems[i].Text.Length > 1;
+                    recientesToolStripMenuItem.DropDownItems[i].Visible = boolTexto;
+                }
+            }
         }
 
         private void ajusteDeLineaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -233,6 +239,7 @@ namespace Ejer4
 
         private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new AcercaForm().ShowDialog();
 
         }
 
@@ -265,8 +272,15 @@ namespace Ejer4
                     {
                         writer.Write("");
                     }
-
-                    //Faltan ultimos directorios
+                    foreach (string s in rutasArchivos)
+                    {
+                        if (s == null)
+                        {
+                            writer.Write("");
+                        }
+                        else
+                            writer.Write(s);
+                    }
                 }
             }
         }
@@ -291,6 +305,10 @@ namespace Ejer4
                         tbNote.BackColor = Color.FromArgb(R, G, B);
                         tbNote.Font = new Font(reader.ReadString(), reader.ReadInt32());
                         ruta = reader.ReadString();
+                        for (int i = 0; i < rutasArchivos.Length; i++)
+                        {
+                            rutasArchivos[i] = reader.ReadString();
+                        }
                     }
                     catch//No genérico
                     {
