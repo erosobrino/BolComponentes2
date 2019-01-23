@@ -7,13 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-//- Ajuste de línea(El menú dispondrá de un check).
-//- Cuadro de Acerca de… modal.Usa una función lambda para lanzar este cuadro. Ver
-//apéndice del tema de multihilo de Servicios.
-//- Selección de escritura todo en mayúsculas, minúsculas o normal (Se verán Checks).
 
 namespace Ejer4
 {
@@ -25,19 +21,21 @@ namespace Ejer4
             minuscula = 2,
             normal = 3
         }
+
         string directorio = Environment.GetEnvironmentVariable("homedrive") + "\\" + Environment.GetEnvironmentVariable("homepath") + "\\configNotas2.bin";
         bool modificado = false;
-
         int R, G, B;
         bool ajusteLinea = false;
         tipo tipoSeleccionado = (tipo)3;
         string[] rutasArchivos = new string[5];
-
         string ruta;
+
         public Form1()
         {
             InitializeComponent();
+            acercaDeToolStripMenuItem.Click += (Sender, Ev) => new AcercaForm().ShowDialog();
         }
+
         private void Nuevo(object sender, EventArgs e)
         {
             DialogResult res = opciones(sender, e);
@@ -104,8 +102,6 @@ namespace Ejer4
                 modificado = false;
             }
         }
-
-
 
         private DialogResult Guardar(object sender, EventArgs e)
         {
@@ -206,41 +202,104 @@ namespace Ejer4
 
         private void recientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < rutasArchivos.Length; i++)
+
+        }
+
+        private void Reciente_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            DialogResult oldText = opciones(sender, e);
+            if (oldText.Equals(DialogResult.OK))
             {
-                if (rutasArchivos[i] != null)
+                tbNote.Text = "";
+                using (StreamReader reader = new StreamReader(menuItem.Text))
                 {
-                    recientesToolStripMenuItem.DropDownItems[i].Text = rutasArchivos[i];
-                    bool boolTexto = recientesToolStripMenuItem.DropDownItems[i].Text.Length > 1;
-                    recientesToolStripMenuItem.DropDownItems[i].Visible = boolTexto;
+                    String line = reader.ReadLine();
+                    while (line != null)
+                    {
+                        tbNote.AppendText(line);
+                        line = reader.ReadLine();
+                    }
+                    //tbNota.Text = reader.ReadToEnd();
                 }
+                ruta = menuItem.Text;
+
+                for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                {
+                    rutasArchivos[i] = rutasArchivos[i - 1];
+                }
+                rutasArchivos[0] = ruta;
             }
+            modificado = false;
         }
 
         private void ajusteDeLineaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ajusteDeLineaToolStripMenuItem.Checked = !ajusteDeLineaToolStripMenuItem.Checked;
+            tbNote.WordWrap = ajusteDeLineaToolStripMenuItem.Checked;
         }
 
         private void seleccionMayusculasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            seleccionMayusculasToolStripMenuItem.Checked = true;
+            seleccionMinusculasToolStripMenuItem.Checked = false;
+            seleccionNormalToolStripMenuItem.Checked = false;
+            tipoSeleccionado = (tipo)1;
+            tbNote.CharacterCasing = CharacterCasing.Upper;
+            modificado = false;
         }
 
         private void seleccionMinusculasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            seleccionMayusculasToolStripMenuItem.Checked = false;
+            seleccionMinusculasToolStripMenuItem.Checked = true;
+            seleccionNormalToolStripMenuItem.Checked = false;
+            tipoSeleccionado = (tipo)2;
+            tbNote.CharacterCasing = CharacterCasing.Lower;
+            modificado = false;
         }
 
         private void seleccionNormalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            seleccionMayusculasToolStripMenuItem.Checked = false;
+            seleccionMinusculasToolStripMenuItem.Checked = false;
+            seleccionNormalToolStripMenuItem.Checked = true;
+            tipoSeleccionado = (tipo)3;
+            tbNote.CharacterCasing = CharacterCasing.Normal;
+            modificado = false;
         }
 
-        private void acercaDeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void recientesToolStripMenuItem1_DropDownOpened(object sender, EventArgs e)
         {
-            new AcercaForm().ShowDialog();
+            for (int i = 0; i < rutasArchivos.Length; i++)
+            {
+                if (rutasArchivos[i] != null)
+                {
+                    recientesToolStripMenuItem1.DropDownItems[i].Text = rutasArchivos[i];
+                    bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
+                    recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
+                }
+            }
+        }
 
+        private void tSAjusteLinea_Click(object sender, EventArgs e)
+        {
+            ajusteDeLineaToolStripMenuItem.PerformClick();
+        }
+
+        private void tSAbrir_Click(object sender, EventArgs e)
+        {
+            abrirArchivoToolStripMenuItem.PerformClick();
+        }
+
+        private void tSGuardar_Click(object sender, EventArgs e)
+        {
+            guardarToolStripMenuItem.PerformClick();
+        }
+
+        private void tSNuevo_Click(object sender, EventArgs e)
+        {
+            nuevoTextoToolStripMenuItem.PerformClick();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -254,7 +313,7 @@ namespace Ejer4
             {
                 using (BinaryWriter writer = new BinaryWriter(new FileStream(directorio, FileMode.Create)))
                 {
-                    writer.Write(ajusteLinea);
+                    writer.Write(tbNote.WordWrap);
                     writer.Write((int)tipoSeleccionado);
                     writer.Write(tbNote.ForeColor.R);
                     writer.Write(tbNote.ForeColor.G);
@@ -294,7 +353,24 @@ namespace Ejer4
                     try
                     {
                         ajusteLinea = reader.ReadBoolean();
+                        tbNote.WordWrap = ajusteLinea;
+                        ajusteDeLineaToolStripMenuItem.Checked = ajusteLinea;
                         tipoSeleccionado = (tipo)reader.ReadInt32();
+                        switch (tipoSeleccionado)
+                        {
+                            case (tipo)1:
+                                seleccionMayusculasToolStripMenuItem.Checked = true;
+                                seleccionMayusculasToolStripMenuItem_Click(sender, e);
+                                break;
+                            case (tipo)2:
+                                seleccionMinusculasToolStripMenuItem.Checked = true;
+                                seleccionMinusculasToolStripMenuItem_Click(sender, e);
+                                break;
+                            case (tipo)3:
+                                seleccionNormalToolStripMenuItem.Checked = true;
+                                seleccionNormalToolStripMenuItem_Click(sender, e);
+                                break;
+                        }
                         R = reader.ReadByte();
                         G = reader.ReadByte();
                         B = reader.ReadByte();
@@ -310,27 +386,28 @@ namespace Ejer4
                             rutasArchivos[i] = reader.ReadString();
                         }
                     }
-                    catch//No genérico
-                    {
-
-                    }
+                    catch { }
                 }
                 if (ruta != null)
                 {
-                    FileInfo file = new FileInfo(ruta);
-                    if (file.Exists)
+                    try
                     {
-                        using (StreamReader reader = new StreamReader(ruta))
+                        FileInfo file = new FileInfo(ruta);
+                        if (file.Exists)
                         {
-                            String linea = reader.ReadLine();
-                            while (linea != null)
+                            using (StreamReader reader = new StreamReader(ruta))
                             {
-                                tbNote.AppendText(linea);
-                                linea = reader.ReadLine();
+                                String linea = reader.ReadLine();
+                                while (linea != null)
+                                {
+                                    tbNote.AppendText(linea);
+                                    linea = reader.ReadLine();
+                                }
                             }
+                            modificado = false;
                         }
-                        modificado = false;
                     }
+                    catch (ArgumentException) { }
                 }
             }
         }
