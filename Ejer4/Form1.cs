@@ -93,13 +93,33 @@ namespace Ejer4
                     }
                     ruta = openFile.FileName;
 
-                    for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                    bool esta = false;
+                    for (int i = 0; i < rutasArchivos.Length; i++)
                     {
-                        rutasArchivos[i] = rutasArchivos[i - 1];
+                        if (!esta)
+                        {
+                            if (rutasArchivos[i] != null)
+                            {
+                                if (rutasArchivos[i].ToUpper().Equals(ruta.ToUpper()))
+                                {
+                                    esta = true;
+                                }
+                            }
+                        }
                     }
-                    rutasArchivos[0] = ruta;
+                    if (!esta)
+                    {
+                        for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                        {
+                            rutasArchivos[i] = rutasArchivos[i - 1];
+                            bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
+                            recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
+                        }
+                        rutasArchivos[0] = ruta;
+                        recientesToolStripMenuItem1.DropDownItems[0].Visible = true;
+                    }
+                    modificado = false;
                 }
-                modificado = false;
             }
         }
 
@@ -123,11 +143,31 @@ namespace Ejer4
                     modificado = false;
                     ruta = saveFile.FileName;
                 }
-                for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                bool esta = false;
+                for (int i = 0; i < rutasArchivos.Length; i++)
                 {
-                    rutasArchivos[i] = rutasArchivos[i - 1];
+                    if (!esta)
+                    {
+                        if (rutasArchivos[i] != null)
+                        {
+                            if (rutasArchivos[i].ToUpper().Equals(ruta.ToUpper()))
+                            {
+                                esta = true;
+                            }
+                        }
+                    }
                 }
-                rutasArchivos[0] = ruta;
+                if (!esta)
+                {
+                    for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                    {
+                        rutasArchivos[i] = rutasArchivos[i - 1];
+                        bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
+                        recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
+                    }
+                    rutasArchivos[0] = ruta;
+                    recientesToolStripMenuItem1.DropDownItems[0].Visible = true;
+                }
             }
             return res;
         }
@@ -224,11 +264,31 @@ namespace Ejer4
                 }
                 ruta = menuItem.Text;
 
-                for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                bool esta = false;
+                for (int i = 0; i < rutasArchivos.Length; i++)
                 {
-                    rutasArchivos[i] = rutasArchivos[i - 1];
+                    if (!esta)
+                    {
+                        if (rutasArchivos[i] != null)
+                        {
+                            if (rutasArchivos[i].ToUpper().Equals(ruta.ToUpper()))
+                            {
+                                esta = true;
+                            }
+                        }
+                    }
                 }
-                rutasArchivos[0] = ruta;
+                if (!esta)
+                {
+                    for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                    {
+                        rutasArchivos[i] = rutasArchivos[i - 1];
+                        bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
+                        recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
+                    }
+                    rutasArchivos[0] = ruta;
+                    recientesToolStripMenuItem1.DropDownItems[0].Visible = true;
+                }
             }
             modificado = false;
         }
@@ -299,7 +359,7 @@ namespace Ejer4
 
         private void tSNuevo_Click(object sender, EventArgs e)
         {
-            nuevoTextoToolStripMenuItem.PerformClick();
+            Nuevo(sender, e);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -408,6 +468,15 @@ namespace Ejer4
                         }
                     }
                     catch (ArgumentException) { }
+                }
+                for (int i = 0; i < rutasArchivos.Length; i++)
+                {
+                    if (rutasArchivos[i] != null)
+                    {
+                        recientesToolStripMenuItem1.DropDownItems[i].Text = rutasArchivos[i];
+                        bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
+                        recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
+                    }
                 }
             }
         }
