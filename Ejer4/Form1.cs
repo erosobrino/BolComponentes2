@@ -88,6 +88,7 @@ namespace Ejer4
                         {
                             tbNote.AppendText(line);
                             line = reader.ReadLine();
+                            tbNote.AppendText(Environment.NewLine);
                         }
                         //tbNota.Text = reader.ReadToEnd();
                     }
@@ -240,11 +241,6 @@ namespace Ejer4
             tbNote.Undo();
         }
 
-        private void recientesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Reciente_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
@@ -252,45 +248,61 @@ namespace Ejer4
             if (oldText.Equals(DialogResult.OK))
             {
                 tbNote.Text = "";
-                using (StreamReader reader = new StreamReader(menuItem.Text))
+                try
                 {
-                    String line = reader.ReadLine();
-                    while (line != null)
+                    using (StreamReader reader = new StreamReader(menuItem.Text))
                     {
-                        tbNote.AppendText(line);
-                        line = reader.ReadLine();
-                    }
-                    //tbNota.Text = reader.ReadToEnd();
-                }
-                ruta = menuItem.Text;
-
-                bool esta = false;
-                for (int i = 0; i < rutasArchivos.Length; i++)
-                {
-                    if (!esta)
-                    {
-                        if (rutasArchivos[i] != null)
+                        String line = reader.ReadLine();
+                        while (line != null)
                         {
-                            if (rutasArchivos[i].ToUpper().Equals(ruta.ToUpper()))
+                            tbNote.AppendText(line);
+                            line = reader.ReadLine();
+                        }
+                        //tbNota.Text = reader.ReadToEnd();
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show("This file doesnt exists", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    for (int i = 0; i < rutasArchivos.Length; i++)
+                    {
+                        if (rutasArchivos[i] == menuItem.Text)
+                        {
+                            rutasArchivos[i] = "";
+                            recientesToolStripMenuItem1.DropDownItems[i].Text = "";
+                            recientesToolStripMenuItem1.DropDownItems[i].Visible = false;
+                        }
+                    }
+                    ruta = menuItem.Text;
+
+                    bool esta = false;
+                    for (int i = 0; i < rutasArchivos.Length; i++)
+                    {
+                        if (!esta)
+                        {
+                            if (rutasArchivos[i] != null)
                             {
-                                esta = true;
+                                if (rutasArchivos[i].ToUpper().Equals(ruta.ToUpper()))
+                                {
+                                    esta = true;
+                                }
                             }
                         }
                     }
-                }
-                if (!esta)
-                {
-                    for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                    if (!esta)
                     {
-                        rutasArchivos[i] = rutasArchivos[i - 1];
-                        bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
-                        recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
+                        for (int i = rutasArchivos.Length - 1; i > 0; i--)
+                        {
+                            rutasArchivos[i] = rutasArchivos[i - 1];
+                            bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
+                            recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
+                        }
+                        rutasArchivos[0] = ruta;
+                        recientesToolStripMenuItem1.DropDownItems[0].Visible = true;
                     }
-                    rutasArchivos[0] = ruta;
-                    recientesToolStripMenuItem1.DropDownItems[0].Visible = true;
                 }
+                modificado = false;
             }
-            modificado = false;
         }
 
         private void ajusteDeLineaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -304,7 +316,7 @@ namespace Ejer4
             seleccionMayusculasToolStripMenuItem.Checked = true;
             seleccionMinusculasToolStripMenuItem.Checked = false;
             seleccionNormalToolStripMenuItem.Checked = false;
-            tipoSeleccionado = (tipo)1;
+            tipoSeleccionado = tipo.mayusculas;
             tbNote.CharacterCasing = CharacterCasing.Upper;
             modificado = false;
         }
@@ -342,75 +354,59 @@ namespace Ejer4
             }
         }
 
-        private void tSAjusteLinea_Click(object sender, EventArgs e)
-        {
-            ajusteDeLineaToolStripMenuItem.PerformClick();
-        }
-
-        private void tSAbrir_Click(object sender, EventArgs e)
-        {
-            abrirArchivoToolStripMenuItem.PerformClick();
-        }
-
-        private void tSGuardar_Click(object sender, EventArgs e)
-        {
-            guardarToolStripMenuItem.PerformClick();
-        }
-
-        private void tSNuevo_Click(object sender, EventArgs e)
-        {
-            Nuevo(sender, e);
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            DialogResult res = opciones(sender, e);
-            if (res.Equals(DialogResult.Cancel))
+            try
             {
-                e.Cancel = true;
-            }
-            else
-            {
-                using (BinaryWriter writer = new BinaryWriter(new FileStream(directorio, FileMode.Create)))
+                DialogResult res = opciones(sender, e);
+                if (res.Equals(DialogResult.Cancel))
                 {
-                    writer.Write(tbNote.WordWrap);
-                    writer.Write((int)tipoSeleccionado);
-                    writer.Write(tbNote.ForeColor.R);
-                    writer.Write(tbNote.ForeColor.G);
-                    writer.Write(tbNote.ForeColor.B);
-                    writer.Write(tbNote.BackColor.R);
-                    writer.Write(tbNote.BackColor.G);
-                    writer.Write(tbNote.BackColor.B);
-                    writer.Write(tbNote.Font.FontFamily.Name);
-                    writer.Write((int)tbNote.Font.Size);
-                    if (ruta != null)
+                    e.Cancel = true;
+                }
+                else
+                {
+                    using (BinaryWriter writer = new BinaryWriter(new FileStream(directorio, FileMode.Create)))
                     {
-                        writer.Write(ruta);
-                    }
-                    else
-                    {
-                        writer.Write("");
-                    }
-                    foreach (string s in rutasArchivos)
-                    {
-                        if (s == null)
+                        writer.Write(tbNote.WordWrap);
+                        writer.Write((int)tipoSeleccionado);
+                        writer.Write(tbNote.ForeColor.R);
+                        writer.Write(tbNote.ForeColor.G);
+                        writer.Write(tbNote.ForeColor.B);
+                        writer.Write(tbNote.BackColor.R);
+                        writer.Write(tbNote.BackColor.G);
+                        writer.Write(tbNote.BackColor.B);
+                        writer.Write(tbNote.Font.FontFamily.Name);
+                        writer.Write((int)tbNote.Font.Size);
+                        if (ruta != null)
+                        {
+                            writer.Write(ruta);
+                        }
+                        else
                         {
                             writer.Write("");
                         }
-                        else
-                            writer.Write(s);
+                        foreach (string s in rutasArchivos)
+                        {
+                            if (s == null)
+                            {
+                                writer.Write("");
+                            }
+                            else
+                                writer.Write(s);
+                        }
                     }
                 }
             }
+            catch { }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             if (File.Exists(directorio))
             {
-                using (BinaryReader reader = new BinaryReader(File.Open(directorio, FileMode.Open)))
+                try
                 {
-                    try
+                    using (BinaryReader reader = new BinaryReader(File.Open(directorio, FileMode.Open)))
                     {
                         ajusteLinea = reader.ReadBoolean();
                         tbNote.WordWrap = ajusteLinea;
@@ -446,37 +442,38 @@ namespace Ejer4
                             rutasArchivos[i] = reader.ReadString();
                         }
                     }
-                    catch { }
                 }
-                if (ruta != null)
+                catch { }
+            }
+            if (ruta != null)
+            {
+                try
                 {
-                    try
+                    FileInfo file = new FileInfo(ruta);
+                    if (file.Exists)
                     {
-                        FileInfo file = new FileInfo(ruta);
-                        if (file.Exists)
+                        using (StreamReader reader = new StreamReader(ruta))
                         {
-                            using (StreamReader reader = new StreamReader(ruta))
+                            String linea = reader.ReadLine();
+                            while (linea != null)
                             {
-                                String linea = reader.ReadLine();
-                                while (linea != null)
-                                {
-                                    tbNote.AppendText(linea);
-                                    linea = reader.ReadLine();
-                                }
+                                tbNote.AppendText(linea);
+                                linea = reader.ReadLine();
+                                tbNote.AppendText(Environment.NewLine);
                             }
-                            modificado = false;
                         }
+                        modificado = false;
                     }
-                    catch (ArgumentException) { }
                 }
-                for (int i = 0; i < rutasArchivos.Length; i++)
+                catch (ArgumentException) { }
+            }
+            for (int i = 0; i < rutasArchivos.Length; i++)
+            {
+                if (rutasArchivos[i] != null)
                 {
-                    if (rutasArchivos[i] != null)
-                    {
-                        recientesToolStripMenuItem1.DropDownItems[i].Text = rutasArchivos[i];
-                        bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
-                        recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
-                    }
+                    recientesToolStripMenuItem1.DropDownItems[i].Text = rutasArchivos[i];
+                    bool boolTexto = recientesToolStripMenuItem1.DropDownItems[i].Text.Length > 1;
+                    recientesToolStripMenuItem1.DropDownItems[i].Visible = boolTexto;
                 }
             }
         }
