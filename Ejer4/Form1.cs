@@ -13,6 +13,7 @@ using System.Windows.Forms;
 
 namespace Ejer4
 {
+    //Validado
     public partial class Form1 : Form
     {
         enum tipo
